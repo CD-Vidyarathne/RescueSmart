@@ -1,30 +1,20 @@
-import express, { Request, Response } from "express";
-import axios from "axios";
+import express, { Application, Request, Response } from "express";
+import "dotenv/config";
+import bodyParser from "body-parser";
+import smsRoutes from "./routes/smsRoutes";
 
-const app = express();
-const port = process.env.PORT || 3000;
+const app: Application = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/sms", smsRoutes);
 
 app.get("/", async (req: Request, res: Response) => {
-  try {
-    const sms = await axios.post("https://api.ideamart.io/sms/send", {
-      version: "1.0",
-      applicationId: "APP_066154",
-      password: "16d09f64ea091a23ca011a372c6ddb65",
-      message: "Hello",
-      destinationAddresses: ["tel:94779364550"],
-      sourceAddress: "77000",
-      deliveryStatusRequest: "1",
-      encoding: "245",
-      binaryHeader:
-        "526574697265206170706c69636174696f6e20616e642072656c6561736520524b7320696620666f756e642065787069726564",
-    });
-    console.log(sms.data);
-    res.send(sms.data);
-  } catch (err) {
-    console.log(err);
-  }
+  res.send("Welcome to the Rescue Smart API");
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
