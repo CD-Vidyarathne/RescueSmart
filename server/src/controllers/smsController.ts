@@ -1,37 +1,59 @@
 import { Request, Response } from "express";
-import { generatePrompt } from "../utilities/utils";
+import { generatePrompt, getNearestCity } from "../utilities/utils";
 import { generateResponse } from "../services/aiService";
-import { sendSMS } from "../services/smsService";
+import { sendSMSToUser } from "../services/smsService";
+import { getLocationOfUser } from "../services/locationService";
 
 export const receiveSMS = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  const { message, sender } = req.body;
+
+  console.log("Received SMS: " + message + " from " + sender);
+
+  if (!message || !sender) {
+    res.status(400).json({ success: false, message: "Invalid SMS" });
+    return;
+  }
+
   try {
-    const { message, sender } = req.body;
+    let smsResponse = "Hello, World";
 
-    console.log("Received SMS: " + message + " from " + sender);
-
-    if (!message || !sender) {
-      res.status(400).json({ success: false, message: "Invalid SMS" });
-      return;
+    if (message.includes("SAFELOCATION")) {
+      const location = message.substr(message.indexOf(" ") + 1);
+      console.log(location);
+      // TODO: implement safe location saving
+      smsResponse = "Location Saved. Thank you.";
+    } else {
+      const { lat, long } = await getLocationOfUser(sender);
+      let nearestCity = null;
+      if (lat && long) nearestCity = await getNearestCity(lat, long);
+      const prompt = generatePrompt(message, nearestCity ?? "Sri Lanka");
+      console.log(prompt);
+      smsResponse = await generateResponse(prompt);
     }
 
-    const prompt = generatePrompt(message);
-    console.log(`Generated prompt: ${prompt}`);
-
-    const aiResponse = await generateResponse(prompt);
-    console.log(`AI response: ${aiResponse}`);
-
-    await sendSMS(aiResponse, sender);
+    //await sendSMSToUser(smsResponse, sender);
 
     res
       .status(200)
-      .json({ success: true, message: "Response sent", aiResponse });
+      .json({ success: true, message: "Response sent", smsResponse });
   } catch (error) {
-    console.error("Error processing the SMS", error);
+    //await sendSMSToUser("Service down. Please Try again later.", sender);
     res
       .status(500)
       .json({ success: false, message: "Error processing the SMS" });
   }
+};
+
+export const sendSMS = async (req: Request, res: Response) => {
+  const { message, destination } = req.body;
+
+  if (!message || !destination) {
+    res.status(400).json({ success: false, message: "Invalid SMS" });
+    return;
+  }
+
+  await sendSMSToUser(message, destination);
 };

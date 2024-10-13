@@ -7,10 +7,13 @@ const model = new ChatGoogleGenerativeAI({
 
 export async function generateResponse(prompt: string) {
   try {
-    const response = await model.invoke(prompt);
-    console.log(response.content);
+    // const response = await model.invoke(prompt);
+    const response = {
+      content: "Hello from generative AI",
+    };
     return response.content;
   } catch (error) {
-    console.error(error);
+    console.log(error);
+    throw error;
   }
 }
