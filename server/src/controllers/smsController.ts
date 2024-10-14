@@ -54,6 +54,10 @@ export const sendSMS = async (req: Request, res: Response) => {
     res.status(400).json({ success: false, message: "Invalid SMS" });
     return;
   }
-
-  await sendSMSToUser(message, destination);
+  try {
+    await sendSMSToUser(message, destination);
+    res.status(200).json({ success: true, message: "SMS sent" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error sending the SMS" });
+  }
 };
