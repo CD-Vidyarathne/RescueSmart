@@ -34,13 +34,13 @@ export const receiveSMS = async (
       smsResponse = await generateResponse(prompt);
     }
 
-    //await sendSMSToUser(smsResponse, sender);
+    await sendSMSToUser(smsResponse, sender);
 
     res
       .status(200)
       .json({ success: true, message: "Response sent", smsResponse });
   } catch (error) {
-    //await sendSMSToUser("Service down. Please Try again later.", sender);
+    await sendSMSToUser("Service down. Please Try again later.", sender);
     res
       .status(500)
       .json({ success: false, message: "Error processing the SMS" });
