@@ -34,7 +34,7 @@ export const sendSMSToAllUsers = async (message: any) => {
     password: process.env.SMS_APP_PASSWORD,
     message: message,
     destinationAddresses: ["tel:all"],
-    deliveryStatusRequest: "1",
+    deliveryStatusRequest: "0",
   };
 
   try {
