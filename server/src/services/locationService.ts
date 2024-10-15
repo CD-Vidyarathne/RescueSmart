@@ -34,11 +34,11 @@ export const getLocationOfUser = async (userNumber: any) => {
         lng: null,
       };
     }
-    // return result;
-    return {
-      lat: 9.6615,
-      lng: 80.0255,
-    };
+    return result;
+    // return {
+    //   lat: 9.6615,
+    //   lng: 80.0255,
+    // };
   } catch (error) {
     console.error("Error fetching location", error);
     return {
