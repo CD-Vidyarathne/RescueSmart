@@ -9,6 +9,8 @@ const SAFE_LOCATIONS_PATH = path.resolve(
   "../../resources/safeLocations.csv",
 );
 
+const DISASTER_PATH = path.resolve(__dirname, "../../resources/disasters.csv");
+
 let cachedCities: City[] = [];
 
 export const loadCitiesFromCSV = (): Promise<void> => {
@@ -70,6 +72,37 @@ export const addSafeLocationToCSV = async (
   } catch (error) {
     console.error("Error adding safe location to CSV:", error);
   }
+};
+
+export const addDisasterToCSV = async (disaster: any): Promise<void> => {
+  const csvString = `${disaster.city},${disaster.disaster}\n`;
+
+  try {
+    fs.appendFileSync(DISASTER_PATH, csvString, "utf8");
+
+    console.log(`Successfully added the disaster to the CSV.`);
+  } catch (error) {
+    console.error("Error adding safe location to CSV:", error);
+  }
+};
+
+export const getDisastersFromCSV = async (city: string): Promise<string[]> => {
+  return new Promise((resolve, reject) => {
+    const disasters: string[] = [];
+    fs.createReadStream(DISASTER_PATH)
+      .pipe(csv())
+      .on("data", (row) => {
+        if (row.city === city) {
+          disasters.push(row.disaster);
+        }
+      })
+      .on("end", () => {
+        resolve(disasters);
+      })
+      .on("error", (error) => {
+        reject(error);
+      });
+  });
 };
 
 const haversineDistance = (
@@ -148,4 +181,8 @@ export async function getNearestFiveSafeLocations(
     console.error("Error fetching safe locations:", error);
     return [];
   }
+}
+
+export function getAllCities(): City[] {
+  return cachedCities;
 }
