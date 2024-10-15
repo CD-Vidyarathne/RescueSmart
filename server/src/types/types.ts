@@ -10,3 +10,9 @@ export interface SafeLocation {
   latitude: number;
   longitude: number;
 }
+
+export interface Contact {
+  city: string;
+  contactName: string;
+  phoneNumber: string;
+}

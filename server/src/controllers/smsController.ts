@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
 import {
+  addSafeLocationToCSV,
   getNearestCity,
   getNearestFiveSafeLocations,
 } from "../utilities/locationUtils";
 import { generatePrompt } from "../utilities/aiUtils";
 import { generateResponse } from "../services/aiService";
-import { sendSMSToUser } from "../services/smsService";
+import { sendSMSToAllUsers, sendSMSToUser } from "../services/smsService";
 import { getLocationOfUser } from "../services/locationService";
-import { SafeLocation } from "../types/types";
+import { SafeLocation, Contact } from "../types/types";
+import { addContactToCSV, getContactsFromCSV } from "../utilities/contactUtils";
+import { generateSMSResponse } from "../utilities/smsUtils";
 
 export const receiveSMS = async (
   req: Request,
@@ -24,13 +27,13 @@ export const receiveSMS = async (
   }
 
   try {
-    let smsResponse = "Hello, World";
+    let smsResponse = "";
+    const { lat, lng } = await getLocationOfUser(sender);
+    let nearestCity = null;
+    if (lat && lng) nearestCity = await getNearestCity(lat, lng);
 
     if (message.includes("SAFELOCATION")) {
       const loc = message.substr(message.indexOf(" ") + 1);
-      const { lat, lng } = await getLocationOfUser(sender);
-      let nearestCity = null;
-      if (lat && lng) nearestCity = await getNearestCity(lat, lng);
       const safeLocation: SafeLocation = {
         city: "",
         location: "",
@@ -43,21 +46,37 @@ export const receiveSMS = async (
         safeLocation.latitude = lat;
         safeLocation.longitude = lng;
 
-        // TODO: SAVE CSV FILE
+        await addSafeLocationToCSV(safeLocation);
+        smsResponse = "Location Saved. Thank you.";
       } else {
         console.log("Location Parameteres Wrong.");
+        smsResponse =
+          "Location Saving Error. Thank you. Please try again later.";
       }
-      smsResponse = "Location Saved. Thank you.";
+    } else if (message.includes("HELPER")) {
+      const name = message.substr(message.indexOf(" ") + 1);
+      if (nearestCity && name && sender) {
+        const contact: Contact = {
+          city: nearestCity,
+          contactName: name,
+          phoneNumber: sender,
+        };
+
+        await addContactToCSV(contact);
+        smsResponse = "Thank you for helping others.";
+      } else {
+        console.log("Contact Parameteres Wrong.");
+        smsResponse = "Something went wrong. Please try again later.";
+      }
     } else if (message.includes("NEARESTHELP")) {
-      let nearestSafeLocations: string[] = [];
-      const { lat, lng } = await getLocationOfUser(sender);
-      if (lat && lng)
+      let nearestSafeLocations: SafeLocation[] = [];
+      let contacts: Contact[] = [];
+      if (lat && lng) {
         nearestSafeLocations = await getNearestFiveSafeLocations(lat, lng);
-      smsResponse = nearestSafeLocations.join("\n");
+      }
+      if (nearestCity) contacts = await getContactsFromCSV(nearestCity);
+      smsResponse = generateSMSResponse(nearestSafeLocations, contacts);
     } else {
-      const { lat, lng } = await getLocationOfUser(sender);
-      let nearestCity = null;
-      if (lat && lng) nearestCity = await getNearestCity(lat, lng);
       const prompt = generatePrompt(message, nearestCity ?? "Sri Lanka");
       console.log(prompt);
       smsResponse = await generateResponse(prompt);
@@ -101,5 +120,12 @@ export const sendSMSBroadcast = async (req: Request, res: Response) => {
     return;
   }
 
-  // TODO:
+  try {
+    await sendSMSToAllUsers(message);
+    res.status(200).json({ success: true, message: "SMS Broadcasted" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error sending the SMS Broadcast" });
+  }
 };

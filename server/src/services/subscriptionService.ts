@@ -1,10 +1,13 @@
 import axios from "axios";
 
-export const subscribeUser = async (number: any) => {
+export const subscribeUser = async (
+  number: any,
+  method: "subscribe" | "unsubscribe",
+) => {
   const request = {
     applicationId: process.env.SMS_APP_ID,
     password: process.env.SMS_APP_PASSWORD,
-    action: "1",
+    action: method == "subscribe" ? "1" : "0",
     subscriberId: `tel:${number}`,
   };
 
@@ -20,7 +23,7 @@ export const subscribeUser = async (number: any) => {
         },
       },
     );
-    console.log("Subscribed", response.data);
+    console.log("Subscription process completed.", response.data);
   } catch (error) {
     console.error("Error sending SMS", error);
     throw error;

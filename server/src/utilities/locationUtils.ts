@@ -1,13 +1,20 @@
 import fs from "fs";
 import csv from "csv-parser";
 import { City, SafeLocation } from "../types/types";
+import path from "path";
+
+const CITIES_PATH = path.resolve(__dirname, "../../resources/districts.csv");
+const SAFE_LOCATIONS_PATH = path.resolve(
+  __dirname,
+  "../../resources/safeLocations.csv",
+);
 
 let cachedCities: City[] = [];
 
 export const loadCitiesFromCSV = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const cities: City[] = [];
-    fs.createReadStream("./resources/districts.csv")
+    fs.createReadStream(CITIES_PATH)
       .pipe(csv())
       .on("data", (row) => {
         cities.push({
@@ -30,7 +37,7 @@ export const loadCitiesFromCSV = (): Promise<void> => {
 const readSafeLocationsFromCSV = (): Promise<SafeLocation[]> => {
   return new Promise((resolve, reject) => {
     const safeLocations: SafeLocation[] = [];
-    fs.createReadStream("./resources/safeLocations.csv")
+    fs.createReadStream(SAFE_LOCATIONS_PATH)
       .pipe(csv())
       .on("data", (row) => {
         safeLocations.push({
@@ -47,6 +54,22 @@ const readSafeLocationsFromCSV = (): Promise<SafeLocation[]> => {
         reject(error);
       });
   });
+};
+
+export const addSafeLocationToCSV = async (
+  location: SafeLocation,
+): Promise<void> => {
+  const csvString = `${location.city},${location.location},${location.latitude},${location.longitude}\n`;
+
+  try {
+    fs.appendFileSync(SAFE_LOCATIONS_PATH, csvString, "utf8");
+
+    console.log(
+      `Successfully added ${location.location} in ${location.city} to the CSV.`,
+    );
+  } catch (error) {
+    console.error("Error adding safe location to CSV:", error);
+  }
 };
 
 const haversineDistance = (
@@ -94,7 +117,7 @@ export async function getNearestCity(
 export async function getNearestFiveSafeLocations(
   userLat: number,
   userLong: number,
-): Promise<string[]> {
+): Promise<SafeLocation[]> {
   try {
     const safeLocations = await readSafeLocationsFromCSV();
     const locationsWithDistance = safeLocations.map((location) => ({
@@ -110,10 +133,16 @@ export async function getNearestFiveSafeLocations(
       (a, b) => a.distance - b.distance,
     );
 
-    // Get the names of the nearest five safe locations
     const nearestFive = sortedLocations
       .slice(0, 5)
-      .map((location) => `${location.city} - ${location.location}`);
+      .map((location): SafeLocation => {
+        return {
+          location: location.location,
+          city: location.city,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        };
+      });
     return nearestFive;
   } catch (error) {
     console.error("Error fetching safe locations:", error);
