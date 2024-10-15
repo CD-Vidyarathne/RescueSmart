@@ -17,19 +17,19 @@ export const receiveSMS = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const { message, sender } = req.body;
+  const { message, sourceAddress, requestId, encoding, version } = req.body;
 
-  console.log("Received SMS: " + message + " from " + sender);
+  console.log("Received SMS: " + message + " from " + sourceAddress);
 
-  if (!message || !sender) {
-    console.log(message, sender);
+  if (!message || !sourceAddress) {
+    console.log(message, sourceAddress);
     res.status(400).json({ success: false, message: "Invalid SMS" });
     return;
   }
 
   try {
     let smsResponse = "";
-    const { lat, lng } = await getLocationOfUser(sender);
+    const { lat, lng } = await getLocationOfUser(sourceAddress);
     let nearestCity = null;
     if (lat && lng) nearestCity = await getNearestCity(lat, lng);
 
@@ -56,11 +56,11 @@ export const receiveSMS = async (
       }
     } else if (message.includes("HELPER")) {
       const name = message.substr(message.indexOf(" ") + 1);
-      if (nearestCity && name && sender) {
+      if (nearestCity && name && sourceAddress) {
         const contact: Contact = {
           city: nearestCity,
           contactName: name,
-          phoneNumber: sender,
+          phoneNumber: sourceAddress,
         };
 
         await addContactToCSV(contact);
@@ -90,13 +90,13 @@ export const receiveSMS = async (
 
     console.log(smsResponse);
 
-    await sendSMSToUser(smsResponse, sender);
+    await sendSMSToUser(smsResponse, sourceAddress);
 
     res
       .status(200)
       .json({ success: true, message: "Response sent", smsResponse });
   } catch (error) {
-    await sendSMSToUser("Service down. Please Try again later.", sender);
+    await sendSMSToUser("Service down. Please Try again later.", sourceAddress);
     res
       .status(500)
       .json({ success: false, message: "Error processing the SMS" });
