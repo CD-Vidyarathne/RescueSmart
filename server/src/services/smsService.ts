@@ -6,7 +6,7 @@ export const sendSMSToUser = async (message: any, destination: any) => {
     password: process.env.SMS_APP_PASSWORD,
     message: message,
     destinationAddresses: [`tel:${destination}`],
-    deliveryStatusRequest: "1",
+    deliveryStatusRequest: "0",
   };
 
   console.log(smsData);
