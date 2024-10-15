@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { addDisasterToCSV, getAllCities } from "../utilities/locationUtils";
+import {
+  addDisasterToCSV,
+  deleteDisasterFromCSV,
+  getAllCities,
+  getAllDisastersFromCSV,
+} from "../utilities/locationUtils";
 
 export const getAllLocations = async (
   req: Request,
@@ -28,5 +33,30 @@ export const addDisaster = async (
     res.status(200).json("Success");
   } catch (error) {
     res.status(500).json({ message: "Error adding disaster", error });
+  }
+};
+
+export const getAllDisasters = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const disasters = await getAllDisastersFromCSV();
+    res.status(200).json(disasters);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching disasters", error });
+  }
+};
+
+export const removeDisaster = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const { csvString } = req.body;
+  try {
+    await deleteDisasterFromCSV(csvString);
+    res.status(200).json("Success");
+  } catch (error) {
+    res.status(500).json({ message: "Error removing disaster", error });
   }
 };

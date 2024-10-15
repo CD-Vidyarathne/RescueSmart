@@ -18,9 +18,8 @@ const BroadcastMessage: React.FC = () => {
         placeholder="Message to Broadcast"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="w-full p-2 mb-2 border rounded"
+        className="w-full h-full p-2 mb-2 border rounded"
       />
-      <div className="flex-grow" />
       <button
         onClick={handleBroadcast}
         className="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700"

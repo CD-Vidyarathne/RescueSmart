@@ -16,3 +16,8 @@ export interface Contact {
   contactName: string;
   phoneNumber: string;
 }
+
+export interface Disaster {
+  city: string;
+  disaster: string;
+}

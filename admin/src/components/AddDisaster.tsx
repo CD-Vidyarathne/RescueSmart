@@ -21,7 +21,7 @@ const AddDisaster: React.FC = () => {
 
   const handleAddDisaster = async () => {
     try {
-      await axios.post("/locations/add", {
+      await axios.post("/locations/add-disaster", {
         city: selectedCity,
         disaster: disaster,
       });

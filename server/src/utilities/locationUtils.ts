@@ -1,6 +1,6 @@
 import fs from "fs";
 import csv from "csv-parser";
-import { City, SafeLocation } from "../types/types";
+import { City, Disaster, SafeLocation } from "../types/types";
 import path from "path";
 
 const CITIES_PATH = path.resolve(__dirname, "../../resources/districts.csv");
@@ -86,7 +86,24 @@ export const addDisasterToCSV = async (disaster: any): Promise<void> => {
   }
 };
 
-export const getDisastersFromCSV = async (city: string): Promise<string[]> => {
+export const deleteDisasterFromCSV = async (csvString: any): Promise<void> => {
+  try {
+    const data = fs.readFileSync(DISASTER_PATH, "utf8");
+
+    const updatedData = data
+      .split("\n")
+      .filter((line) => line.trim() !== csvString.trim())
+      .join("\n");
+
+    fs.writeFileSync(DISASTER_PATH, updatedData, "utf8");
+  } catch (error) {
+    console.error("Error removing disaster:", error);
+  }
+};
+
+export const getDisastersOfCityFromCSV = async (
+  city: string,
+): Promise<string[]> => {
   return new Promise((resolve, reject) => {
     const disasters: string[] = [];
     fs.createReadStream(DISASTER_PATH)
@@ -95,6 +112,26 @@ export const getDisastersFromCSV = async (city: string): Promise<string[]> => {
         if (row.city === city) {
           disasters.push(row.disaster);
         }
+      })
+      .on("end", () => {
+        resolve(disasters);
+      })
+      .on("error", (error) => {
+        reject(error);
+      });
+  });
+};
+
+export const getAllDisastersFromCSV = async (): Promise<Disaster[]> => {
+  return new Promise((resolve, reject) => {
+    const disasters: Disaster[] = [];
+    fs.createReadStream(DISASTER_PATH)
+      .pipe(csv())
+      .on("data", (row) => {
+        disasters.push({
+          city: row.city,
+          disaster: row.disaster,
+        });
       })
       .on("end", () => {
         resolve(disasters);

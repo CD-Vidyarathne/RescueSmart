@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import {
   addSafeLocationToCSV,
-  getDisastersFromCSV,
+  getDisastersOfCityFromCSV,
   getNearestCity,
   getNearestFiveSafeLocations,
 } from "../utilities/locationUtils";
@@ -78,7 +78,7 @@ export const receiveSMS = async (
       if (nearestCity) contacts = await getContactsFromCSV(nearestCity);
       smsResponse = generateSMSResponse(nearestSafeLocations, contacts);
     } else {
-      const situation = await getDisastersFromCSV(nearestCity!);
+      const situation = await getDisastersOfCityFromCSV(nearestCity!);
       const prompt = generatePrompt(
         message,
         nearestCity ?? "Sri Lanka",
