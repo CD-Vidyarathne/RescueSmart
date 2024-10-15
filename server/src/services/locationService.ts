@@ -26,25 +26,24 @@ export const getLocationOfUser = async (userNumber: any) => {
     if (response.data.latitude && response.data.longitude) {
       result = {
         lat: response.data.latitude,
-        long: response.data.longitude,
+        lng: response.data.longitude,
       };
     } else {
       result = {
         lat: null,
-        long: null,
+        lng: null,
       };
     }
-    // return result;
-    // NOTE: This is for testing only
-    return {
-      lat: 9.6615,
-      long: 80.0255,
-    };
+    return result;
+    // return {
+    //   lat: 9.6615,
+    //   lng: 80.0255,
+    // };
   } catch (error) {
     console.error("Error fetching location", error);
     return {
       lat: null,
-      long: null,
+      lng: null,
     };
   }
 };

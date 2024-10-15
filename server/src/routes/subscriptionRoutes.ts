@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { subscribe } from "../controllers/subscribeController";
+import { subscribe } from "../controllers/subscriptionController";
 
 const router = Router();
 
-router.post("/do", subscribe);
+router.post("/subscribe", subscribe);
 
 export default router;

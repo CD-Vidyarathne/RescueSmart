@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { subscribeUser } from "../services/subscribeService";
+import { subscribeUser } from "../services/subscriptionService";
 
 export const subscribe = async (req: Request, res: Response): Promise<void> => {
   const { number } = req.body;

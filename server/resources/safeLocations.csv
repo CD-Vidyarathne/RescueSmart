@@ -1,0 +1,93 @@
+city,safelocation,lat,lng
+Colombo,Independence Square,6.9278,79.8644
+Colombo,Viharamahadevi Park,6.9175,79.8612
+Colombo,Beira Lake,6.9271,79.8488
+Colombo,Galle Face Green,6.9271,79.8449
+Kandy,Bahirawakanda Vihara Buddha Statue,7.2930,80.6385
+Kandy,Kandy Lake,7.2906,80.6350
+Kandy,Udawatta Kele Sanctuary,7.3001,80.6332
+Kandy,Peradeniya Botanical Gardens,7.2715,80.5952
+Kilinochchi,Public Library,9.3802,80.4004
+Kilinochchi,War Memorial,9.3846,80.4098
+Kilinochchi,District Secretariat,9.3862,80.4009
+Kilinochchi,Kandasamy Temple,9.3822,80.4071
+Trincomalee,Fort Frederick,8.5697,81.2337
+Trincomalee,Koneswaram Temple,8.5753,81.2330
+Trincomalee,Uppuveli Beach,8.5964,81.2287
+Trincomalee,Nilaveli Beach,8.7240,81.2265
+Galle,Galle Fort,6.0328,80.2170
+Galle,Unawatuna Beach,6.0095,80.2506
+Galle,Jungle Beach,6.0050,80.2494
+Galle,Japanese Peace Pagoda,6.0083,80.2470
+Jaffna,Nallur Kandaswamy Temple,9.6641,80.0254
+Jaffna,Jaffna Fort,9.6626,80.0081
+Jaffna,Casuarina Beach,9.7925,79.8810
+Jaffna,Point Pedro,9.8310,80.2393
+Batticaloa,Kallady Bridge,7.7051,81.7089
+Batticaloa,Batticaloa Lighthouse,7.7228,81.6972
+Batticaloa,St. Mary's Cathedral,7.7132,81.6956
+Batticaloa,Pasikudah Beach,7.9385,81.5630
+Matara,Weherahena Temple,5.9409,80.5640
+Matara,Matara Fort,5.9486,80.5355
+Matara,Polhena Beach,5.9363,80.5293
+Matara,Dondra Head Lighthouse,5.9208,80.5945
+Anuradhapura,Sacred Bodhi Tree,8.3459,80.3882
+Anuradhapura,Isurumuniya Temple,8.3450,80.4036
+Anuradhapura,Mihintale,8.3500,80.4997
+Anuradhapura,Twin Ponds,8.3740,80.4287
+Gampaha,Henarathgoda Botanical Garden,7.0947,80.0113
+Gampaha,Ranaviru Monument,7.0931,80.0076
+Gampaha,Weliweriya Church,7.0389,80.0223
+Gampaha,Maligatenna Rajamaha Viharaya,7.0800,80.0427
+Puttalam,St. Anne's Church,8.0314,79.8324
+Puttalam,Kalpitiya Beach,8.2372,79.7451
+Puttalam,Wilpattu National Park,8.3563,80.1327
+Puttalam,Puttalam Lagoon,8.0383,79.8349
+Badulla,Muthiyangana Temple,6.9899,81.0556
+Badulla,Dunhinda Falls,6.9918,81.0671
+Badulla,Badulla Railway Station,6.9859,81.0600
+Badulla,Diyaluma Falls,6.7606,81.0032
+Matale,Aluvihare Rock Temple,7.5393,80.6360
+Matale,Sigiriya Rock,7.9567,80.7603
+Matale,Pidurangala Rock,7.9641,80.7597
+Matale,Wasgamuwa National Park,7.7533,80.9256
+Vavuniya,Archaeological Museum,8.7520,80.4983
+Vavuniya,Vavuniya Railway Station,8.7552,80.4896
+Vavuniya,Omantai Junction,9.0043,80.4661
+Vavuniya,Madukanda Temple,8.7784,80.4923
+Kalutara,Kalutara Bodhiya,6.5837,79.9641
+Kalutara,Richmond Castle,6.5794,79.9614
+Kalutara,Kalutara Beach,6.5860,79.9606
+Kalutara,Asokaramaya Buddhist Temple,6.5803,79.9661
+Mannar,Thiruketheeswaram Temple,8.9781,79.9144
+Mannar,Mannar Fort,8.9773,79.9111
+Mannar,Adam's Bridge,9.0782,79.3502
+Mannar,Madurankulam Lake,8.9701,79.9063
+Kurunegala,Ethagala (Elephant Rock),7.4866,80.3626
+Kurunegala,Bogambara Lake,7.4861,80.3631
+Kurunegala,Ridiviharaya,7.5936,80.4906
+Kurunegala,Kurunegala Clock Tower,7.4865,80.3600
+Nuwara Eliya,Victoria Park,6.9723,80.7662
+Nuwara Eliya,Horton Plains National Park,6.8028,80.8058
+Nuwara Eliya,Gregory Lake,6.9573,80.7808
+Nuwara Eliya,Pedro Tea Factory,6.9634,80.7814
+Kegalle,Pinnawala Elephant Orphanage,7.2945,80.3847
+Kegalle,Ambuluwawa Tower,7.0825,80.4982
+Kegalle,Saradiel Village,7.2187,80.4126
+Kegalle,Uthuwankanda,7.2082,80.4207
+Hambantota,Ruhuna National Park (Yala),6.2823,81.4651
+Hambantota,Hambantota Port,6.1238,81.1221
+Hambantota,Bundala National Park,6.2177,81.2948
+Hambantota,Kataragama Temple,6.4197,81.3342
+Monaragala,Diyaluma Falls,6.7643,81.0033
+Monaragala,Bogoda Wooden Bridge,6.7512,81.0151
+Monaragala,Yala East National Park,6.3494,81.5519
+Monaragala,Beragala Pass,6.7536,81.0135
+Ratnapura,Saman Devalaya,6.6839,80.3980
+Ratnapura,Bopath Ella Waterfall,6.8340,80.3943
+Ratnapura,Rathganga Falls,6.7101,80.3756
+Ratnapura,Gem Museum,6.6828,80.4021
+Polonnaruwa,Parakrama Samudra,7.9335,81.0016
+Polonnaruwa,Gal Vihara,7.9363,81.0027
+Polonnaruwa,Polonnaruwa Vatadage,7.9394,81.0042
+Polonnaruwa,Nissanka Latha Mandapaya,7.9411,81.0021

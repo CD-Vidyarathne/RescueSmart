@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
-import { generatePrompt, getNearestCity } from "../utilities/utils";
+import {
+  getNearestCity,
+  getNearestFiveSafeLocations,
+} from "../utilities/locationUtils";
+import { generatePrompt } from "../utilities/aiUtils";
 import { generateResponse } from "../services/aiService";
 import { sendSMSToUser } from "../services/smsService";
 import { getLocationOfUser } from "../services/locationService";
+import { SafeLocation } from "../types/types";
 
 export const receiveSMS = async (
   req: Request,
@@ -13,6 +18,7 @@ export const receiveSMS = async (
   console.log("Received SMS: " + message + " from " + sender);
 
   if (!message || !sender) {
+    console.log(message, sender);
     res.status(400).json({ success: false, message: "Invalid SMS" });
     return;
   }
@@ -21,18 +27,43 @@ export const receiveSMS = async (
     let smsResponse = "Hello, World";
 
     if (message.includes("SAFELOCATION")) {
-      const location = message.substr(message.indexOf(" ") + 1);
-      console.log(location);
-      // TODO: implement safe location saving
-      smsResponse = "Location Saved. Thank you.";
-    } else {
-      const { lat, long } = await getLocationOfUser(sender);
+      const loc = message.substr(message.indexOf(" ") + 1);
+      const { lat, lng } = await getLocationOfUser(sender);
       let nearestCity = null;
-      if (lat && long) nearestCity = await getNearestCity(lat, long);
+      if (lat && lng) nearestCity = await getNearestCity(lat, lng);
+      const safeLocation: SafeLocation = {
+        city: "",
+        location: "",
+        latitude: 0,
+        longitude: 0,
+      };
+      if (nearestCity && loc && lat && lng) {
+        safeLocation.city = nearestCity;
+        safeLocation.location = loc;
+        safeLocation.latitude = lat;
+        safeLocation.longitude = lng;
+
+        // TODO: SAVE CSV FILE
+      } else {
+        console.log("Location Parameteres Wrong.");
+      }
+      smsResponse = "Location Saved. Thank you.";
+    } else if (message.includes("NEARESTHELP")) {
+      let nearestSafeLocations: string[] = [];
+      const { lat, lng } = await getLocationOfUser(sender);
+      if (lat && lng)
+        nearestSafeLocations = await getNearestFiveSafeLocations(lat, lng);
+      smsResponse = nearestSafeLocations.join("\n");
+    } else {
+      const { lat, lng } = await getLocationOfUser(sender);
+      let nearestCity = null;
+      if (lat && lng) nearestCity = await getNearestCity(lat, lng);
       const prompt = generatePrompt(message, nearestCity ?? "Sri Lanka");
       console.log(prompt);
       smsResponse = await generateResponse(prompt);
     }
+
+    console.log(smsResponse);
 
     await sendSMSToUser(smsResponse, sender);
 
@@ -60,4 +91,15 @@ export const sendSMS = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Error sending the SMS" });
   }
+};
+
+export const sendSMSBroadcast = async (req: Request, res: Response) => {
+  const { message } = req.body;
+
+  if (!message) {
+    res.status(400).json({ success: false, message: "Invalid SMS" });
+    return;
+  }
+
+  // TODO:
 };
