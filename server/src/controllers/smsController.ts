@@ -92,9 +92,10 @@ export const receiveSMS = async (
 
     await sendSMSToUser(smsResponse, sourceAddress);
 
-    res
-      .status(200)
-      .json({ success: true, message: "Response sent", smsResponse });
+    res.status(200).json({
+      statusCode: "S1000",
+      statusDetail: "SMS Received Successfully",
+    });
   } catch (error) {
     await sendSMSToUser("Service down. Please Try again later.", sourceAddress);
     res
